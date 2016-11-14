@@ -1,0 +1,8 @@
+fpga-support:
+  files: [
+    rtl/AxiBramLogger.sv,
+    rtl/BramDwc.sv,
+    rtl/BramLogger.sv,
+    rtl/BramPort.sv,
+    rtl/TdpBramArray.sv,
+  ]
