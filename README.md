@@ -1,4 +1,3 @@
-
 # IP Blocks to Support Design, Prototyping, and Verification of PULP on FPGAs
 
 This repository contains IP blocks that can be useful in many aspects of working with PULP on FPGA
