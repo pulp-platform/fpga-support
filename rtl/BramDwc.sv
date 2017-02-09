@@ -83,6 +83,20 @@ module BramDwc
   end
   // }}}
 
+  // Register the Addr_S of master interface to make sure the address stays
+  // stable for word selection on reads
+  logic [ADDR_BITW-1:0] Addr_SN, Addr_SP;
+  assign Addr_SN = FromMaster_PS.Addr_S;
+
+  always_ff @ (posedge FromMaster_PS.Clk_C)
+  begin
+    if (FromMaster_PS.Rst_R == 1'b1) begin
+      Addr_SP <= 'b0;
+    end else if (FromMaster_PS.En_S == 1'b1) begin
+      Addr_SP <= Addr_SN;
+    end
+  end
+
   // Pass clock, reset, and enable through. {{{
   assign ToSlave_PM.Clk_C = FromMaster_PS.Clk_C;
   assign ToSlave_PM.Rst_R = FromMaster_PS.Rst_R;
@@ -91,9 +105,9 @@ module BramDwc
 
   // Data Width Conversion {{{
 
-  logic [MST_ADDR_WORD_BITW-1:0] MstWordAddr_S;
-  assign MstWordAddr_S
-      = FromMaster_PS.Addr_S[(MST_ADDR_WORD_BITW-1)+MST_ADDR_WORD_BITO:MST_ADDR_WORD_BITO];
+  logic [MST_ADDR_WORD_BITW-1:0] MstWordAddr_S, MstWordAddrReg_S;
+  assign MstWordAddr_S    = Addr_SN[(MST_ADDR_WORD_BITW-1)+MST_ADDR_WORD_BITO:MST_ADDR_WORD_BITO];
+  assign MstWordAddrReg_S = Addr_SP[(MST_ADDR_WORD_BITW-1)+MST_ADDR_WORD_BITO:MST_ADDR_WORD_BITO];
 
   logic [SLV_ADDR_WORD_BITW-1:0] ToWordAddr_S;
   assign ToWordAddr_S = MstWordAddr_S / (PAR_IDX_MAX_VAL+1);
@@ -103,8 +117,9 @@ module BramDwc
     ToSlave_PM.Addr_S[(SLV_ADDR_WORD_BITW-1)+SLV_ADDR_WORD_BITO:SLV_ADDR_WORD_BITO] = ToWordAddr_S;
   end
 
-  logic [PAR_IDX_BITW-1:0] ParIdx_S;
-  assign ParIdx_S = MstWordAddr_S % (PAR_IDX_MAX_VAL+1);
+  logic [PAR_IDX_BITW-1:0] ParIdxRd_S, ParIdxWr_S;
+  assign ParIdxWr_S = MstWordAddr_S    % (PAR_IDX_MAX_VAL+1);
+  assign ParIdxRd_S = MstWordAddrReg_S % (PAR_IDX_MAX_VAL+1); // based on address applied with En_S
 
   logic [PAR_IDX_MAX_VAL:0] [MST_DATA_BITW-1:0]  Rd_D;
   genvar p;
@@ -114,7 +129,7 @@ module BramDwc
     localparam integer SLV_BIT_LOW    = MST_DATA_BITW*p;
     localparam integer SLV_BIT_HIGH   = SLV_BIT_LOW + (MST_DATA_BITW-1);
     always_comb begin
-      if (ParIdx_S == p) begin
+      if (ParIdxWr_S == p) begin
         ToSlave_PM.WrEn_S[SLV_BYTE_HIGH:SLV_BYTE_LOW] = FromMaster_PS.WrEn_S;
       end else begin
         ToSlave_PM.WrEn_S[SLV_BYTE_HIGH:SLV_BYTE_LOW] = '0;
@@ -123,7 +138,7 @@ module BramDwc
     assign Rd_D[p] = ToSlave_PM.Rd_D[SLV_BIT_HIGH:SLV_BIT_LOW];
     assign ToSlave_PM.Wr_D[SLV_BIT_HIGH:SLV_BIT_LOW] = FromMaster_PS.Wr_D;
   end
-  assign FromMaster_PS.Rd_D = Rd_D[ParIdx_S];
+  assign FromMaster_PS.Rd_D = Rd_D[ParIdxRd_S];
 
   // }}}
 
