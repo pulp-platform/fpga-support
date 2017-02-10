@@ -52,8 +52,8 @@ module BramDwc
 
   // Ports {{{
   (
-    BramPort    FromMaster_PS,
-    BramPort    ToSlave_PM
+    BramPort.Slave  FromMaster_PS,
+    BramPort.Master ToSlave_PM
   );
   // }}}
 
