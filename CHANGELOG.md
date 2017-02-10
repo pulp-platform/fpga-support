@@ -20,6 +20,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
   now explicitly declared either as `Master` or as `Slave`, so that synthesis tools will not infer
   `inout` connections.
 
+## [v0.1.1] - 2017-02-10
+
+### Fixed
+
+- `BramDwc`: address registering.  The address can now be changed between clock edges and the output
+  will still correspond to the address applied at the former clock edge.
+
+- `BramDwc`: compatibility of interface port declarations with synthesis tools.  Interface ports are
+  now explicitly declared either as `Master` or as `Slave`, so that synthesis tools will not infer
+  `inout` connections.
+
 ## v0.1.0 - 2016-11-14
 
 ### Added
@@ -36,3 +47,4 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
   `BramLogger`.
 
 [v0.2.0]: https://iis-git.ee.ethz.ch/pulp-project/fpga-support/compare/v0.1.0...v0.2.0
+[v0.1.1]: https://iis-git.ee.ethz.ch/pulp-project/fpga-support/compare/v0.1.0...v0.1.1
