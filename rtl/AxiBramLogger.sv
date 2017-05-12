@@ -17,7 +17,7 @@
  * a particular purpose.
  *
  * Current Maintainers:
- * - Andreas Kurth  <andkurt@ee.ethz.ch>
+ * - Andreas Kurth  <akurth@iis.ee.ethz.ch>
  * - Pirmin Vogel   <vogelpi@iis.ee.ethz.ch>
  */
 
