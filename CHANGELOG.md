@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 
 ### Fixed
 
+- `src_files.yml`: added the missing entry for `AxiToAxiLitePc`
+
 ## [v0.2.0] - 2017-02-10
 
 ### Added
