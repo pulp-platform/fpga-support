@@ -6,4 +6,9 @@ fpga-support:
     rtl/BramLogger.sv,
     rtl/BramPort.sv,
     rtl/TdpBramArray.sv,
+    rtl/sync_sp_ram.sv,
+    rtl/sync_dp_ram.sv,
+    rtl/sync_tp_ram.sv,
+    rtl/sync_sp_ram_be_nx32.sv,
+    rtl/sync_sp_ram_be_nx64.sv,
   ]
