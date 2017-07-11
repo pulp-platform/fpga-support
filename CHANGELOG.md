@@ -11,6 +11,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 
 ### Fixed
 
+## [v0.3.0] - 2017-07-11
+
+### Added
+
+- Set of five inferable, synchronous BRAM-based memories:
+  - `SyncDpRam` (dual-port)
+  - `SyncSpRam` (single-port)
+  - `SyncSpRamBeNx32` (single-port N x 32bit with byte-wise enable)
+  - `SyncSpRamBeNx64` (single-port N x 64bit with byte-wise enable)
+  - `SyncTpRam` (two-port)
+
 ## [v0.2.2] - 2017-07-11
 
 ### Fixed
@@ -65,7 +76,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 - `AxiBramLogger`: a logger to keep track of events on an AXI bus.  This module is build on
   `BramLogger`.
 
-[Unreleased]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.2...HEAD
+[Unreleased]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.3.0...HEAD
+[v0.3.0]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.2...v0.3.0
 [v0.2.2]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.1...v0.2.2
 [v0.2.1]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.1.0...v0.2.0
