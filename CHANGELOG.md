@@ -22,6 +22,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
   - `SyncSpRamBeNx64` (single-port N x 64bit with byte-wise enable)
   - `SyncTpRam` (two-port)
 
+## [v0.2.3] - 2017-07-11
+
+### Fixed
+
+- `src_files.yml`: added missing comma at the end of the `AxiToAxiLitePc` entry.
+
 ## [v0.2.2] - 2017-07-11
 
 ### Fixed
@@ -77,7 +83,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
   `BramLogger`.
 
 [Unreleased]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.3.0...HEAD
-[v0.3.0]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.2...v0.3.0
+[v0.3.0]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.3...v0.3.0
+[v0.2.3]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.2...v0.2.3
 [v0.2.2]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.1...v0.2.2
 [v0.2.1]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.1.0...v0.2.0
