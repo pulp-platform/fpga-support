@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 
 ### Fixed
 
+## [v0.2.1] - 2017-07-11
+
+### Fixed
+
 - `src_files.yml`: added the missing entry for `AxiToAxiLitePc`.
 
 ## [v0.2.0] - 2017-02-10
@@ -54,6 +58,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 - `AxiBramLogger`: a logger to keep track of events on an AXI bus.  This module is build on
   `BramLogger`.
 
-[Unreleased]: https://iis-git.ee.ethz.ch/pulp-project/fpga-support/compare/v0.2.0...HEAD
+[Unreleased]: https://iis-git.ee.ethz.ch/pulp-project/fpga-support/compare/v0.2.1...HEAD
+[v0.2.1]: https://iis-git.ee.ethz.ch/pulp-project/fpga-support/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://iis-git.ee.ethz.ch/pulp-project/fpga-support/compare/v0.1.0...v0.2.0
 [v0.1.1]: https://iis-git.ee.ethz.ch/pulp-project/fpga-support/compare/v0.1.0...v0.1.1
