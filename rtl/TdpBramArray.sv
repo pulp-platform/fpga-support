@@ -21,12 +21,7 @@
  * Both ports can be operated independently and asynchronously; the behavior on access collisions is
  * specified in the Xilinx Block Memory Generator Product Guide (PG058).
  *
- * Copyright (c) 2016 Integrated Systems Laboratory, ETH Zurich.  This is free software under the
- * terms of the GNU General Public License as published by the Free Software Foundation, either
- * version 3 of the License, or (at your option) any later version.  This software is distributed
- * without any warranty; without even the implied warranty of merchantability or fitness for
- * a particular purpose.  The HDL code in `BRAM_TDP_MACRO` is the property of Xilinx and not
- * affected by this copyright notice.
+ * Copyright (c) 2016 ETH Zurich and University of Bologna.  All rights reserved.
  *
  * Current Maintainers:
  * - Andreas Kurth  <akurth@iis.ee.ethz.ch>

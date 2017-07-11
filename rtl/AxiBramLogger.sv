@@ -10,11 +10,7 @@
  *                  all following bits: AxiId_DI
  *  - third word (and fourth word for 64-bit addresses): AxiAddr_DI
  *
- * Copyright (c) 2016 Integrated Systems Laboratory, ETH Zurich.  This is free software under the
- * terms of the GNU General Public License as published by the Free Software Foundation, either
- * version 3 of the License, or (at your option) any later version.  This software is distributed
- * without any warranty; without even the implied warranty of merchantability or fitness for
- * a particular purpose.
+ * Copyright (c) 2016 ETH Zurich and University of Bologna.  All rights reserved.
  *
  * Current Maintainers:
  * - Andreas Kurth  <akurth@iis.ee.ethz.ch>
