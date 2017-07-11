@@ -5,12 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](http://semver.org).
 
-## [Unreleased]
-
-### Added
-
-### Fixed
-
 ## [v0.3.0] - 2017-07-11
 
 ### Added
@@ -82,7 +76,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 - `AxiBramLogger`: a logger to keep track of events on an AXI bus.  This module is build on
   `BramLogger`.
 
-[Unreleased]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.3.0...HEAD
 [v0.3.0]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.3...v0.3.0
 [v0.2.3]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.2...v0.2.3
 [v0.2.2]: https://iis-git.ee.ethz.ch/pulp-restricted/fpga-support/compare/v0.2.1...v0.2.2
