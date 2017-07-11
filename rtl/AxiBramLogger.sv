@@ -118,4 +118,4 @@ module AxiBramLogger
 
 endmodule
 
-// vim: ts=2 sw=2 sts=2 et nosmartindent autoindent foldmethod=marker tw=100
+// vim: nosmartindent autoindent foldmethod=marker

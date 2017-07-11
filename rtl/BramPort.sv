@@ -55,4 +55,4 @@ interface BramPort
 
 endinterface
 
-// vim: ts=2 sw=2 sts=2 et tw=100
+// vim: nosmartindent autoindent
