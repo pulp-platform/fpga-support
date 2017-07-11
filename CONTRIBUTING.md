@@ -21,3 +21,8 @@ into logically connected, atomic units.  A best-practice contribution follows th
 
 5.  Refactor your code to make it clean, simple, and maintainable.  Repeat steps 3 to 5 until no
     refactoring is necessary anymore.  Ask the maintainer to merge your contribution.
+
+We only accept contributions that follow the formatting conventions specified by the
+[`.editorconfig`](./.editorconfig) file.  If you use an editor that is suitable for editing code,
+chances are good that it can automatically take care of this (either out of the box or with a
+plugin, see http://editorconfig.org for more information).
