@@ -43,7 +43,7 @@ module AxiToAxiLitePc
   logic                       AwValid_DN, AwValid_DP;
 
   enum logic {RREADY, READ}   StateRead_SP,   StateRead_SN;
-  enum logic [1:0] {WREADY, WRITE, WRESP}
+  enum logic [2:0] {WREADY, WRITE, WAITAWREADY, WAITWREADY, WRESP}
                               StateWrite_SP,  StateWrite_SN;
   // }}}
 
@@ -54,8 +54,10 @@ module AxiToAxiLitePc
     AwId_DN             = AwId_DP;
     Axi_PS.aw_ready     = 1'b0;
     Axi_PS.w_ready      = 1'b0;
+    Axi_PS.b_valid      = 1'b0;
     AxiLite_PM.aw_valid = 1'b0;
     AxiLite_PM.w_valid  = 1'b0;
+    AxiLite_PM.b_ready  = 1'b0;
     StateWrite_SN       = StateWrite_SP;
 
     case (StateWrite_SP)
@@ -74,15 +76,37 @@ module AxiToAxiLitePc
           AxiLite_PM.aw_valid = 1'b1;
           AxiLite_PM.w_valid  = 1'b1;
 
-          if (AxiLite_PM.w_ready && AxiLite_PM.aw_ready) begin // Do the write
+          if (AxiLite_PM.w_ready && AxiLite_PM.aw_ready) begin // Both AW and W channels fire.
             Axi_PS.w_ready = 1'b1;
             StateWrite_SN  = WRESP;
+          end else if (AxiLite_PM.w_ready) begin // Only the W channel fires, the AW channel waits.
+            Axi_PS.w_ready = 1'b1;
+            StateWrite_SN  = WAITAWREADY;
+          end else if (AxiLite_PM.aw_ready) begin // Only the AW channel fires, the W channel waits.
+            StateWrite_SN  = WAITWREADY;
           end
         end
       end
 
+      WAITAWREADY: begin // Wait for AW channel (the W channel already fired).
+        AxiLite_PM.aw_valid = 1'b1;
+        if (AxiLite_PM.aw_ready) begin
+            StateWrite_SN = WRESP;
+        end
+      end
+
+      WAITWREADY: begin // Wait for W channel (the AW channel already fired).
+        AxiLite_PM.w_valid = 1'b1;
+        if (AxiLite_PM.w_ready) begin
+            StateWrite_SN = WRESP;
+        end
+      end
+
+      // Connect B channel handshake signals and wait for it to fire before accepting the next
+      // transaction.
       WRESP: begin
-        // b_valid and b_ready can be connected permanently.
+        AxiLite_PM.b_ready  = Axi_PS.b_ready;
+        Axi_PS.b_valid      = AxiLite_PM.b_valid;
         if (Axi_PS.b_ready && AxiLite_PM.b_valid) begin
           StateWrite_SN = WREADY;
         end
@@ -140,8 +164,6 @@ module AxiToAxiLitePc
   assign AxiLite_PM.w_data    = Axi_PS.w_data;
   assign AxiLite_PM.w_strb    = Axi_PS.w_strb;
 
-  assign AxiLite_PM.b_ready   = Axi_PS.b_ready;
-
   assign AxiLite_PM.ar_addr   = Axi_PS.ar_addr;
 
   assign AxiLite_PM.r_ready   = Axi_PS.r_ready;
@@ -156,7 +178,6 @@ module AxiToAxiLitePc
   assign Axi_PS.r_id     = ArId_DP;
   assign Axi_PS.r_user   = 'b0;
 
-  assign Axi_PS.b_valid  = AxiLite_PM.b_valid;
   assign Axi_PS.b_resp   = AxiLite_PM.b_resp;
   assign Axi_PS.b_id     = AwId_DP;
   assign Axi_PS.b_user   = 'b0;
