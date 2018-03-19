@@ -5,6 +5,11 @@
  * buffer multiple outstanding transactions; instead, a transaction is only accepted from the AXI
  * master after the previous transaction has been completed by the AXI Lite slave.
  *
+ * This module does NOT support bursts, because AXI Lite itself does not support bursts and
+ * converting AXI4 bursts into separate AXI Lite transactions is fairly involved (different burst
+ * types, alignment, etc.).  If a burst is requested at the AXI4 slave interface, a slave error is
+ * returned and an assertion fails.
+ *
  * For compatibility with Xilinx AXI Lite slaves, the AW and W channels are applied simultaneously
  * at the output.
  *
@@ -42,8 +47,9 @@ module AxiToAxiLitePc
   logic   [AXI_ID_WIDTH-1:0]  AwId_DN,    AwId_DP;
   logic                       AwValid_DN, AwValid_DP;
 
-  enum logic {RREADY, READ}   StateRead_SP,   StateRead_SN;
-  enum logic [2:0] {WREADY, WRITE, WAITAWREADY, WAITWREADY, WRESP}
+  enum logic [1:0] {RREADY, READ, RERR}
+                              StateRead_SP,   StateRead_SN;
+  enum logic [2:0] {WREADY, WRITE, WAITAWREADY, WAITWREADY, WRESP, WERRBEATS, WERRRESP}
                               StateWrite_SP,  StateWrite_SN;
   // }}}
 
@@ -54,6 +60,7 @@ module AxiToAxiLitePc
     AwId_DN             = AwId_DP;
     Axi_PS.aw_ready     = 1'b0;
     Axi_PS.w_ready      = 1'b0;
+    Axi_PS.b_resp       = 2'b00;
     Axi_PS.b_valid      = 1'b0;
     AxiLite_PM.aw_valid = 1'b0;
     AxiLite_PM.w_valid  = 1'b0;
@@ -64,10 +71,14 @@ module AxiToAxiLitePc
 
       WREADY: begin // Wait for aw_valid, latch address on encountering.
         if (Axi_PS.aw_valid) begin
-          Axi_PS.aw_ready   = 1'b1;
-          AwAddr_DN         = Axi_PS.aw_addr;
-          AwId_DN           = Axi_PS.aw_id;
-          StateWrite_SN     = WRITE;
+          Axi_PS.aw_ready = 1'b1;
+          AwId_DN         = Axi_PS.aw_id;
+          if (Axi_PS.aw_len != '0) begin  // Burst length longer than 1 transfer,
+            StateWrite_SN = WERRBEATS;    // which is not supported.
+          end else begin
+            AwAddr_DN     = Axi_PS.aw_addr;
+            StateWrite_SN = WRITE;
+          end
         end
       end
 
@@ -107,7 +118,25 @@ module AxiToAxiLitePc
       WRESP: begin
         AxiLite_PM.b_ready  = Axi_PS.b_ready;
         Axi_PS.b_valid      = AxiLite_PM.b_valid;
+        Axi_PS.b_resp       = AxiLite_PM.b_resp;
         if (Axi_PS.b_ready && AxiLite_PM.b_valid) begin
+          StateWrite_SN = WREADY;
+        end
+      end
+
+      // Absorb write beats of the unsupported burst.
+      WERRBEATS: begin
+        Axi_PS.w_ready = 1'b1;
+        if (Axi_PS.w_valid && Axi_PS.w_last) begin
+          StateWrite_SN = WERRRESP;
+        end
+      end
+
+      // Signal Slave Error on the B channel.
+      WERRRESP: begin
+        Axi_PS.b_resp   = 2'b10; // SLVERR
+        Axi_PS.b_valid  = 1'b1;
+        if (Axi_PS.b_ready) begin
           StateWrite_SN = WREADY;
         end
       end
@@ -125,6 +154,8 @@ module AxiToAxiLitePc
     // Default Assignments
     ArId_DN             = ArId_DP;
     Axi_PS.ar_ready     = 1'b0;
+    Axi_PS.r_resp       = 2'b00;
+    Axi_PS.r_last       = 1'b0;
     Axi_PS.r_valid      = 1'b0;
     AxiLite_PM.ar_valid = 1'b0;
     StateRead_SN        = StateRead_SP;
@@ -132,20 +163,39 @@ module AxiToAxiLitePc
     case (StateRead_SP)
 
       RREADY: begin // Wait for ar_valid, latch ID on encountering.
-        AxiLite_PM.ar_valid = Axi_PS.ar_valid;
-        if (Axi_PS.ar_valid && AxiLite_PM.ar_ready) begin
-          Axi_PS.ar_ready = 1'b1;
-          ArId_DN         = Axi_PS.ar_id;
-          StateRead_SN    = READ;
+        if (Axi_PS.ar_valid) begin
+          if (Axi_PS.ar_len != '0) begin  // Burst length longer than 1 transfer,
+            StateRead_SN    = RERR;       // which is not supported.
+            ArId_DN         = Axi_PS.ar_id;
+            Axi_PS.ar_ready = 1'b1;
+          end else begin
+            AxiLite_PM.ar_valid = Axi_PS.ar_valid;
+            if (AxiLite_PM.ar_ready) begin
+              Axi_PS.ar_ready = 1'b1;
+              ArId_DN         = Axi_PS.ar_id;
+              StateRead_SN    = READ;
+            end
+          end
         end
       end
 
       READ: begin // Wait for r_valid, forward on encountering.
         if (AxiLite_PM.r_valid) begin
-          Axi_PS.r_valid = 1'b1;
+          Axi_PS.r_resp   = AxiLite_PM.r_resp;
+          Axi_PS.r_last   = 1'b1;
+          Axi_PS.r_valid  = 1'b1;
           if (Axi_PS.r_ready) begin
             StateRead_SN = RREADY;
           end
+        end
+      end
+
+      RERR: begin
+        Axi_PS.r_resp   = 2'b10;  // SLVERR
+        Axi_PS.r_last   = 1'b1;
+        Axi_PS.r_valid  = 1'b1;
+        if (Axi_PS.r_ready) begin
+          StateRead_SN = RREADY;
         end
       end
 
@@ -173,12 +223,9 @@ module AxiToAxiLitePc
   // Drive outputs of AXI interface. {{{
 
   assign Axi_PS.r_data   = AxiLite_PM.r_data;
-  assign Axi_PS.r_resp   = AxiLite_PM.r_resp;
-  assign Axi_PS.r_last   = AxiLite_PM.r_valid ? 'b1 : 'b0;
   assign Axi_PS.r_id     = ArId_DP;
   assign Axi_PS.r_user   = 'b0;
 
-  assign Axi_PS.b_resp   = AxiLite_PM.b_resp;
   assign Axi_PS.b_id     = AwId_DP;
   assign Axi_PS.b_user   = 'b0;
 
@@ -200,6 +247,17 @@ module AxiToAxiLitePc
       AwValid_DP    <= AwValid_DN;
       StateRead_SP  <= StateRead_SN;
       StateWrite_SP <= StateWrite_SN;
+    end
+  end
+  // }}}
+
+  // Interface Assertions {{{
+  always @(posedge Clk_CI) begin
+    if (Rst_RBI) begin
+      assert (!(Axi_PS.aw_valid && Axi_PS.aw_len != '0))
+        else $error("Unsupported burst on AW channel!");
+      assert (!(Axi_PS.ar_valid && Axi_PS.ar_len != '0))
+        else $error("Unsupported burst on AR channel!");
     end
   end
   // }}}
