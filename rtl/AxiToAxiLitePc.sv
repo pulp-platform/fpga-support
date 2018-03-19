@@ -124,9 +124,9 @@ module AxiToAxiLitePc
   always_comb begin
     // Default Assignments
     ArId_DN             = ArId_DP;
-    Axi_PS.ar_ready     = 0'b0;
-    Axi_PS.r_valid      = 0'b0;
-    AxiLite_PM.ar_valid = 0'b0;
+    Axi_PS.ar_ready     = 1'b0;
+    Axi_PS.r_valid      = 1'b0;
+    AxiLite_PM.ar_valid = 1'b0;
     StateRead_SN        = StateRead_SP;
 
     case (StateRead_SP)
