@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/), and this project adheres to
 [Semantic Versioning](http://semver.org).
 
+## [v0.2.5] - 2018-07-24
+
+### Updated
+
+- This package has been moved from the internal GitLab to GitHub.  The Changelog and the affected
+  Read-Mes and scripts have been updated accordingly.
+
 ## [v0.2.4] - 2018-07-03
 
 ### Fixed
@@ -64,6 +71,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 - `AxiBramLogger`: a logger to keep track of events on an AXI bus.  This module is build on
   `BramLogger`.
 
+[v0.2.5]: https://github.com/pulp-platform/fpga-support/compare/v0.2.4...v0.2.5
 [v0.2.4]: https://github.com/pulp-platform/fpga-support/compare/v0.2.3...v0.2.4
 [v0.2.3]: https://github.com/pulp-platform/fpga-support/compare/v0.2.2...v0.2.3
 [v0.2.2]: https://github.com/pulp-platform/fpga-support/compare/v0.2.1...v0.2.2
