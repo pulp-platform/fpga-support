@@ -1,7 +1,7 @@
 VER                 = 2016.1
 VIVADO_SOURCE_CMDS  = -source scripts/setup.tcl -source scripts/synthesize.tcl
 
-CF_MATH_PKG_PATH	= ../../../../rtl/packages
+CF_MATH_PKG_PATH	= ../../../../ips/pkg/cfmath
 
 nogui: pkgdeps synth_nogui
 
