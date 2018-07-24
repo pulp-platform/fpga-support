@@ -11,7 +11,7 @@ RUNSCRIPT_GUI	= ./scripts/run_gui.tcl
 
 # Path to the 'CfMath' package.  This default path is correct when this package is used in the
 # 'big.pulp' repository.  Otherwise, adapt it so that 'CfMath.sv' can be found at this path.
-CF_MATH_PKG_PATH ?= ../../../../../fe/rtl/packages
+CF_MATH_PKG_PATH ?= ../../../../../fe/ips/pkg/cfmath
 
 PKGS = $(CF_MATH_PKG_PATH)/CfMath.sv
 SRCS = $(wildcard ../common/modules/*.sv) $(wildcard ../../rtl/*.sv)
