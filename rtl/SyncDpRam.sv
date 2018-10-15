@@ -33,7 +33,8 @@ module SyncDpRam
   parameter OUT_REGS   = 0,
   parameter SIM_INIT   = 0     // for simulation only, will not be synthesized
                                // 0: no init, 1: zero init, 2: random init
-) (
+                               // note: on verilator, 2 is not supported. define the VERILATOR macro to work around.
+)(
   input  logic                  Clk_CI,
   input  logic                  Rst_RBI,
   // port A
@@ -71,7 +72,9 @@ module SyncDpRam
       if(Rst_RBI == 1'b0 && SIM_INIT>0) begin
         for(int k=0; k<DATA_DEPTH;k++) begin
           if(SIM_INIT==1) val = '0;
+          `ifndef VERILATOR
           else if(SIM_INIT==2) void'(randomize(val));
+          `endif
           Mem_DP[k] = val;
         end
       end else begin
@@ -94,7 +97,7 @@ module SyncDpRam
             RdDataB_DN <= Mem_DP[AddrB_DI];
           end
         end
-      end  
+      end
     end
   `endif
 
