@@ -25,7 +25,9 @@ module SyncSpRam
   parameter ADDR_WIDTH = 10,
   parameter DATA_DEPTH = 1024, // usually 2**ADDR_WIDTH, but can be lower
   parameter DATA_WIDTH = 32,
-  parameter OUT_REGS   = 0
+  parameter OUT_REGS   = 0,
+  parameter SIM_INIT   = 0     // for simulation only, will not be synthesized
+                               // 0: no init, 1: zero init, 2: random init
 ) (
   input  logic                    Clk_CI,
   input  logic                    Rst_RBI,
@@ -50,6 +52,16 @@ module SyncSpRam
 
   always_ff @(posedge Clk_CI)
   begin
+    //pragma translate_off
+    automatic logic [DATA_WIDTH-1:0] val;
+    if(Rst_RBI == 1'b0 && SIM_INIT>0) begin
+      for(int k=0; k<DATA_DEPTH;k++) begin
+        if(SIM_INIT==1) val = '0;
+        else if(SIM_INIT==2) void'(randomize(val));
+        Mem_DP[k] = val;
+      end
+    end else 
+    //pragma translate_on    
     if (CSel_SI) begin
       if (WrEn_SI) begin
         Mem_DP[Addr_DI] <= WrData_DI;

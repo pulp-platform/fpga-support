@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 
 ## [Unreleased]
 
+- Switch default implementation from ALTERA to XILINX
+- Add simulation init options to inferable rams (none, 0, random, deadbeef)
+
 ### Added
 
 ### Fixed
