@@ -21,15 +21,17 @@
  * - Michael Schaffner  <schaffer@iis.ee.ethz.ch>
  */
 
-`ifndef FPGA_TARGET_XILINX
-  `define FPGA_TARGET_ALTERA
+`ifndef FPGA_TARGET_ALTERA
+  `define FPGA_TARGET_XILINX
 `endif
 
 module SyncSpRamBeNx32
 #(
   parameter ADDR_WIDTH = 10,
   parameter DATA_DEPTH = 1024, // usually 2**ADDR_WIDTH, but can be lower
-  parameter OUT_REGS   = 0     // set to 1 to enable outregs
+  parameter OUT_REGS   = 0,    // set to 1 to enable outregs
+  parameter SIM_INIT   = 0     // for simulation only, will not be synthesized
+                               // 0: no init, 1: zero init, 2: random init, 3: deadbeef init
 ) (
   input  logic                  Clk_CI,
   input  logic                  Rst_RBI,
@@ -59,6 +61,17 @@ module SyncSpRamBeNx32
     logic [DATA_BYTES*8-1:0] Mem_DP[DATA_DEPTH-1:0];
 
     always_ff @(posedge Clk_CI) begin
+      //pragma translate_off
+      automatic logic [31:0] val;
+      if(Rst_RBI == 1'b0 && SIM_INIT>0) begin
+        for(int k=0; k<DATA_DEPTH;k++) begin
+          if(SIM_INIT==1) val = '0;
+          else if(SIM_INIT==2) void'(randomize(val));
+          else val = 32'hdeadbeef;
+          Mem_DP[k] = val;
+        end
+      end else 
+      //pragma translate_on
       if(CSel_SI) begin
         if(WrEn_SI) begin
           if(BEn_SI[0]) Mem_DP[Addr_DI][7:0]   <= WrData_DI[7:0];
@@ -79,6 +92,17 @@ module SyncSpRamBeNx32
     logic [DATA_BYTES-1:0][7:0] Mem_DP[0:DATA_DEPTH-1];
 
     always_ff @(posedge Clk_CI) begin
+      //pragma translate_off
+      automatic logic [31:0] val;
+      if(Rst_RBI == 1'b0 && SIM_INIT>0) begin
+        for(int k=0; k<DATA_DEPTH;k++) begin
+          if(SIM_INIT==1) val = '0;
+          else if(SIM_INIT==2) void'(randomize(val));
+          else val = 32'hdeadbeef;
+          Mem_DP[k] = val;
+        end
+      end else 
+      //pragma translate_on
       if(CSel_SI) begin
         if(WrEn_SI) begin // needs to be static, otherwise Altera wont infer it
           if(BEn_SI[0]) Mem_DP[Addr_DI][0] <= WrData_DI[7:0];

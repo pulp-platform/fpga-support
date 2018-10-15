@@ -21,16 +21,18 @@
  */
 
 // this automatically switches the behavioral description
-// synopsys translate_off
+// pragma translate_off
 `define SIMULATION
-// synopsys translate_on
+// pragma translate_on
 
 module SyncDpRam
 #(
   parameter ADDR_WIDTH = 10,
   parameter DATA_DEPTH = 1024, // usually 2**ADDR_WIDTH, but can be lower
   parameter DATA_WIDTH = 32,
-  parameter OUT_REGS   = 0
+  parameter OUT_REGS   = 0,
+  parameter SIM_INIT   = 0     // for simulation only, will not be synthesized
+                               // 0: no init, 1: zero init, 2: random init
 ) (
   input  logic                  Clk_CI,
   input  logic                  Rst_RBI,
@@ -65,25 +67,34 @@ module SyncDpRam
   `ifdef SIMULATION
     always_ff @(posedge Clk_CI)
     begin
-      if (CSelA_SI) begin
-        if (WrEnA_SI) begin
-          Mem_DP[AddrA_DI] <= WrDataA_DI;
+      automatic logic [DATA_WIDTH-1:0] val;
+      if(Rst_RBI == 1'b0 && SIM_INIT>0) begin
+        for(int k=0; k<DATA_DEPTH;k++) begin
+          if(SIM_INIT==1) val = '0;
+          else if(SIM_INIT==2) void'(randomize(val));
+          Mem_DP[k] = val;
         end
-        else
-        begin
-          RdDataA_DN <= Mem_DP[AddrA_DI];
+      end else begin
+        if (CSelA_SI) begin
+          if (WrEnA_SI) begin
+            Mem_DP[AddrA_DI] <= WrDataA_DI;
+          end
+          else
+          begin
+            RdDataA_DN <= Mem_DP[AddrA_DI];
+          end
         end
-      end
 
-      if (CSelB_SI) begin
-        if (WrEnB_SI) begin
-          Mem_DP[AddrB_DI] <= WrDataB_DI;
+        if (CSelB_SI) begin
+          if (WrEnB_SI) begin
+            Mem_DP[AddrB_DI] <= WrDataB_DI;
+          end
+          else
+          begin
+            RdDataB_DN <= Mem_DP[AddrB_DI];
+          end
         end
-        else
-        begin
-          RdDataB_DN <= Mem_DP[AddrB_DI];
-        end
-      end
+      end  
     end
   `endif
 
