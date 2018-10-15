@@ -32,7 +32,8 @@ module SyncSpRamBeNx64
   parameter OUT_REGS   = 0,    // set to 1 to enable outregs
   parameter SIM_INIT   = 0     // for simulation only, will not be synthesized
                                // 0: no init, 1: zero init, 2: random init, 3: deadbeef init
-) (
+                               // note: on verilator, 2 is not supported. define the VERILATOR macro to work around.
+)(
   input  logic                  Clk_CI,
   input  logic                  Rst_RBI,
   input  logic                  CSel_SI,
@@ -66,11 +67,13 @@ module SyncSpRamBeNx64
       if(Rst_RBI == 1'b0 && SIM_INIT>0) begin
         for(int k=0; k<DATA_DEPTH;k++) begin
           if(SIM_INIT==1) val = '0;
+      `ifndef VERILATOR
           else if(SIM_INIT==2) void'(randomize(val));
+      `endif
           else val = 64'hdeadbeefdeadbeef;
           Mem_DP[k] = val;
         end
-      end else 
+      end else
       //pragma translate_on
       if(CSel_SI) begin
         if(WrEn_SI) begin
@@ -101,11 +104,13 @@ module SyncSpRamBeNx64
       if(Rst_RBI == 1'b0 && SIM_INIT>0) begin
         for(int k=0; k<DATA_DEPTH;k++) begin
           if(SIM_INIT==1) val = '0;
+      `ifndef VERILATOR
           else if(SIM_INIT==2) void'(randomize(val));
+      `endif
           else val = 64'hdeadbeefdeadbeef;
           Mem_DP[k] = val;
         end
-      end else 
+      end else
       //pragma translate_on
       if(CSel_SI) begin
         if(WrEn_SI) begin // needs to be static, otherwise Altera wont infer it
