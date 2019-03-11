@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 
 ### Added
 
+- Bender manifest.
+
 ### Changed
 
 - The implicit dependency on the deprecated `CfMath` repository has been removed.  Instead, this
