@@ -48,7 +48,7 @@
  * - Pirmin Vogel   <vogelpi@iis.ee.ethz.ch>
  */
 
-import CfMath::ceil_div, CfMath::log2;
+import CfMath::ceil_div;
 
 module BramLogger
 
@@ -102,9 +102,9 @@ module BramLogger
   localparam integer LOG_DATA_HIGH          = LOG_DATA_LOW + LOG_DATA_BITW - 1;
 
   // Properties used when addressing the BRAM array
-  localparam integer LOGGING_CNT_BITW       = log2(NUM_LOG_ENTRIES);
+  localparam integer LOGGING_CNT_BITW       = $clog2(NUM_LOG_ENTRIES);
   localparam integer LOGGING_CNT_MAX        = NUM_LOG_ENTRIES-1;
-  localparam integer LOGGING_ADDR_WORD_BITO = log2(LOG_ENTRY_BYTEW);
+  localparam integer LOGGING_ADDR_WORD_BITO = $clog2(LOG_ENTRY_BYTEW);
   localparam integer LOGGING_ADDR_BITW      = LOGGING_CNT_BITW + LOGGING_ADDR_WORD_BITO;
 
   // }}}

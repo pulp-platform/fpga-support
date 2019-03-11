@@ -36,7 +36,7 @@
  * - Pirmin Vogel   <vogelpi@iis.ee.ethz.ch>
  */
 
-import CfMath::ceil_div, CfMath::log2;
+import CfMath::ceil_div;
 
 module TdpBramArray
 
@@ -76,11 +76,11 @@ module TdpBramArray
   localparam integer NUM_ARR_WORDS  = NUM_BRAM_WORDS  * NUM_SER_BRAMS;
 
   // Offset (in bits) of words in the external addresses
-  localparam integer ADDR_WORD_BITO = log2(ARR_BYTEW);
+  localparam integer ADDR_WORD_BITO = $clog2(ARR_BYTEW);
 
-  localparam integer WORD_ADDR_BITW = log2(NUM_ARR_WORDS);
-  localparam integer SER_IDX_BITW   = log2(NUM_SER_BRAMS);
-  localparam integer WORD_IDX_BITW  = log2(NUM_BRAM_WORDS);
+  localparam integer WORD_ADDR_BITW = $clog2(NUM_ARR_WORDS);
+  localparam integer SER_IDX_BITW   = $clog2(NUM_SER_BRAMS);
+  localparam integer WORD_IDX_BITW  = $clog2(NUM_BRAM_WORDS);
 
   // }}}
 

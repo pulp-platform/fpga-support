@@ -42,7 +42,7 @@
  * - Pirmin Vogel   <vogelpi@iis.ee.ethz.ch>
  */
 
-import CfMath::ceil_div, CfMath::log2;
+import CfMath::ceil_div;
 
 module BramDwc
 
@@ -63,15 +63,15 @@ module BramDwc
 
   // Module-Wide Constants {{{
   localparam integer  MST_DATA_BYTEW      = MST_DATA_BITW/8;
-  localparam integer  MST_ADDR_WORD_BITO  = log2(MST_DATA_BYTEW);
+  localparam integer  MST_ADDR_WORD_BITO  = $clog2(MST_DATA_BYTEW);
   localparam integer  MST_ADDR_WORD_BITW  = ADDR_BITW - MST_ADDR_WORD_BITO;
 
   localparam integer  SLV_DATA_BYTEW      = SLV_DATA_BITW/8;
-  localparam integer  SLV_ADDR_WORD_BITO  = log2(SLV_DATA_BYTEW);
+  localparam integer  SLV_ADDR_WORD_BITO  = $clog2(SLV_DATA_BYTEW);
   localparam integer  SLV_ADDR_WORD_BITW  = ADDR_BITW - SLV_ADDR_WORD_BITO;
 
   localparam integer  PAR_IDX_MAX_VAL     = ceil_div(SLV_DATA_BITW, MST_DATA_BITW) - 1;
-  localparam integer  PAR_IDX_BITW        = log2(PAR_IDX_MAX_VAL+1);
+  localparam integer  PAR_IDX_BITW        = $clog2(PAR_IDX_MAX_VAL+1);
   // }}}
 
   // Initial Assertions {{{
