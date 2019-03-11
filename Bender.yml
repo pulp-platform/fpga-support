@@ -7,17 +7,17 @@ dependencies:
 
 sources:
   # Level 0
-  - AxiToAxiLitePc.sv
-  - BramPort.sv
-  - SyncDpRam.sv
-  - SyncSpRam.sv
-  - SyncSpRamBeNx32.sv
-  - SyncSpRamBeNx64.sv
-  - SyncTpRam.sv
+  - rtl/AxiToAxiLitePc.sv
+  - rtl/BramPort.sv
+  - rtl/SyncDpRam.sv
+  - rtl/SyncSpRam.sv
+  - rtl/SyncSpRamBeNx32.sv
+  - rtl/SyncSpRamBeNx64.sv
+  - rtl/SyncTpRam.sv
   # Level 1
-  - BramDwc.sv
-  - TdpBramArray.sv
+  - rtl/BramDwc.sv
+  - rtl/TdpBramArray.sv
   # Level 2
-  - BramLogger.sv
+  - rtl/BramLogger.sv
   # Level 3
-  - AxiBramLogger.sv
+  - rtl/AxiBramLogger.sv
