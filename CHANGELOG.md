@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/), and this 
 
 ### Added
 
+### Changed
+
+- The implicit dependency on the deprecated `CfMath` repository has been removed.  Instead, this
+  package now depends on `common_cells` and uses the `cf_math_pkg` from `common_cells`.
+
 ### Fixed
 
 ## [v0.3.2] - 2018-07-24

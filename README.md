@@ -9,10 +9,8 @@ platforms.  The repository is structured as follows:
 
 ## Usage
 
-Many IP blocks in this repository depend on the [CfMath](https://github.com/pulp-platform/cfmath)
-package.  Make sure to have that package on the list of source files for elaboration.  For
-behavioral and post-synthesis simulations, set the `CF_MATH_PKG_PATH` environment variable to the
-path where you have that package installed.
+Many IP blocks in this repository depend on `cf_math_pkg` from `common_cells`.  Make sure to elaborate
+`cf_math_pkg` before the IP blocks in this repository.
 
 Add all files in the `rtl/` folder to the list of compilation files of your development tool (e.g.,
 Xilinx Vivado).  Read the documentation (header of the source file) of the block that you want to

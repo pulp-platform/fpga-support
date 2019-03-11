@@ -48,7 +48,7 @@
  * - Pirmin Vogel   <vogelpi@iis.ee.ethz.ch>
  */
 
-import CfMath::ceil_div;
+import cf_math_pkg::ceil_div;
 
 module BramLogger
 
